@@ -56,17 +56,154 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoSend = document.getElementById('chatSend');
   const demoMessages = document.getElementById('chatMessages');
 
-  const demoReplies = [
-    "Sahbi! 🦁 واش باغي؟ أنا هنا باش نعاونك فكل حاجة!",
-    "Hahaha, سقسية مليحة! 🎯 واصل كيما راك.",
-    "والله صهبي، هذي سقسية تاع الخير! 😄 واش باغي تعرف بالزبط؟",
-    "Hmm هاذي سقسية عميقة... تفكر فيها بزاف 🔥",
-    "خويا، تقدر تقلي أكثر؟ باغي نفهم ونساعدك مزيان 💪",
-    "Wesh wesh! 🌊 رانا هنايا، واش كاين جديد؟",
-    "هاهاها، برافو عليك صهبي! سقسية ديجا جاوبت عليها فوق، ولكن معليش نعاود: أنا هنا باش نعاونك 😎",
-    "والله غير هاذا؟ تقدر تطلب حاجة أخرى، أنا فاضي ليك ❤️",
-    "C'est bon sahbi, خلاص ديرها في بالك. واصل باللي راك فيه 🚀",
-  ];
+  function getReply(input) {
+    const lower = input.toLowerCase().trim();
+
+    const patterns = [
+      {
+        match: /^(salut|bonjour|bonsoir|hello|hi|hey|salam|السلام|سلام|صباح|مساء)/i,
+        reply: () => {
+          const g = [
+            "Salut sahbi! 🌊 كيفاش راك؟ أنا OranAI، واجد باش نعاونك فكل حاجة!",
+            "Bonjour! 🦁 راني هنا، واش كاين؟ تحب تسقسيني على حاجة؟",
+            "Hey! 🔥 العافية صهبي، تشرفت بيك! واش باغي تبدا؟",
+            "Salam! ✨ هلا هلا، راني في الخدمة. واش باغي نعملو اليوم؟"
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(كيفاش|كيف|كِي|كيفا|كاي راك|كاين راك|la forme|ça va|çava|how are|wesh)/i,
+        reply: () => {
+          const g = [
+            "العافية صهبي! 🚀 راني نزيد نسخن شويا، وأنت كيفاش راك؟ واصل كيما راك!",
+            "Hahaha! أنا دايما بخير صهبي، واش باغي؟ 🦁",
+            "والله راني هنا باش نعاونك، وأنت واصل باللي راك فيه! 🔥",
+            "Layes sahbi! راني في القمة، جامد نهار ما تهزز. واش كاين؟ 💪"
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(deepseek|version|v4|modèle|model|quel ai|type|tech|تقنية|version)/i,
+        reply: () => {
+          return "أنا مدعوم بــ **DeepSeek V4 Flash** 🧠 — نموذج ذكاء اصطناعي قوي، سريع، ومجاني بالكامل. نقدر نكتبلك كود، نترجم، نجاوب على أسئلتك، وحتى نفلّي معاك بالوهراني! 💻🔥 تقدر تقارنني بـ GPT-4 ولكن بوهرانيتي أنا فريد من نوعي.";
+        }
+      },
+      {
+        match: /(كود|code|script|python|javascript|js|html|css|programme|programmation|برمجة)/i,
+        reply: () => {
+          const g = [
+            "آه باغي كود! 🖥️ نقدر نكتبلك بايثون، جافاسكريبت، HTML/CSS، وحتى سكريبتات أتمتة. واش باغي بالزبط؟ أعطيني التفاصيل ونخدمهالك ديجا!",
+            "كود؟ هاها أنا فنان في البرمجة! 💻 قلي واش باغي، بايثون، جافاسكريبت، ولا حاجة أخرى؟ وأنا نخدمهالك في ثواني!",
+            "برمجة؟ صهبي راني هنا! 🚀 نقدر نصنعلك أي سكريبت تحب. أعطيني الفكرة وخلّي الباقي عليا."
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(ترجم|translate|ترجمة|بالوهراني|بالدارجة|درجة|derja|وهراني|وهرانية)/i,
+        reply: () => {
+          const g = [
+            "آه الترجمة للوهراني! 🌊 هذي عندي. قلي الجملة وخلّي عليا الترجمة — باش نشعلوها بالوهراني الفصيح!",
+            "الترجمة للوهراني؟ 🎯 هذا تخصصي! أعطيني النص وأنا نعطيك الترجمة مع النكهة الوهرانية الأصيلة. مثال: 'Good morning' → 'صباح الخير صاحبي، كي راك؟ العافية وين راكي؟'",
+            "هاها، الوهراني عندو نكهتو! 😄 قلي واش باغي تترجم ونخدمهالك بالحب."
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(اسمك|شكون|نتا شكون|what are you|who are|qu'est-ce que tu|شنو|شنويا)/i,
+        reply: () => {
+          return "أنا **OranAI** 🦁 — مساعد ذكي بالوهراني، مدعوم بـ DeepSeek V4. نقدر نكتبلك كود، نترجم، نجاوب، ونفلّي معاك بالديرجا. أنا مثل DeepSeek ولكن بالوهراني — فاهم الدنيا كلها. واش باغي تبدا؟ 💪";
+        }
+      },
+      {
+        match: /(شكرا|merci|thanks|thank you|thankyou|جزاك|بارك|ميترسي)/i,
+        reply: () => {
+          const g = [
+            "العفو صهبي! 🎯 دايما فاضي ليك، حاجة أخرى؟",
+            "لا شكر على واجيب! ❤️ واصل باللي راك فيه، ونحن هنايا باش نعاونو.",
+            "De rien sahbi! 😎 أنا هنا باش نخدم، حاجة أخرى تحبها؟"
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(باي|bye|goodbye|au revoir|معا السلامة|سلام|نروح|نشوفك)/i,
+        reply: () => {
+          const g = [
+            "باي صهبي! 🚀 كان شرف ليا. رجع وقت ما تحب، راني هنا!",
+            "معا السلامة! 🌊 نحبك ونتمنى نشوفك قريب. دير بالك على روحك!",
+            "Au revoir sahbi! 🦁 نتمنى تكون استفدت. أي وقت تحب، أنا هنا."
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(وين|مكان|فين|عنوان|address|موقع|site|landing page|landing|page)/i,
+        reply: () => {
+          return "هاد الـ Landing Page تاع **OranAI** 🎯 — موقع تعريفي للمساعد الذكي بالوهراني. تقدر تلقى الكود كامل على GitHub: https://github.com/klasiinkov/oranai-landing ✨";
+        }
+      },
+      {
+        match: /(حب|love|❤|💖|nice|جميل|رائع|باهي|بصح|تحفه|تحفة)/i,
+        reply: () => {
+          const g = [
+            "هاها شكرا صهبي! ❤️ أنت اللي رائع، بزاف!",
+            "والله نفتخر بيك! 😎 تحب حاجة أخرى ولا نبقاو نفلّيو؟",
+            "C'est gentil! 🦁 هذا من ذوقك. دايما فاضي ليك."
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(واش|شنو|شنهو|واشنو|what|شنويا|euh|qu'est-ce|quoi|comment|pourquoi|ou|where|when)/i,
+        reply: () => {
+          const g = [
+            "سقسية مليحة! 🎯 واش باغي تعرف بالزبط؟ أنا هنا باش نجاوبك.",
+            "هذي سقسية عميقة... 🔥 تفكر فيها بزاف. تقدر تعطيني تفاصيل أكثر باش نعاونك مزيان؟",
+            "واصل كيما راك! 💪 أنا فاهم سقسيتك. واش باغي بالزبط؟",
+            "Hmm 🤔 هايل باش نسقسيلك واعر. قلي أكثر ونعاونك."
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      },
+      {
+        match: /(بيت|btc|crypto|عملات|bitcoin|eth)/i,
+        reply: () => {
+          return "كريبتو؟ 🪙 صهبي، أنا فاهم في العملات الرقمية! نقدر نعاونك بالمعلومات العامة، تحليل السوق، وحتى كتابة سكريبتات للمتاجرة. ولكن تذكّر: هاد مشورة مالية، دير البحث تاعك! 🚀";
+        }
+      },
+      {
+        match: /(بوت|bot|automation|أتمتة|سكراب|scrape|scraping)/i,
+        reply: () => {
+          return "آه البوتات والأتمتة! 🤖 هذا تخصصي. نقدر نكتبلك بوتات بايثون، سيلينيوم، Playwright، وحتى سكريبتات سكرابينغ. أعطيني الفكرة ونخدمهالك! مثال: بوت تاع تويتر، سكرابينغ مواقع، أتمتة مهام... 🚀";
+        }
+      },
+      {
+        match: /.*/,
+        reply: () => {
+          const g = [
+            "هاهاها صهبي، سقسية زعما والو؟ 😄 عاود جرب حاجة أخرى.",
+            "والله ما فهمتك بزاف صهبي. تقدر تعيد صياغة السؤال؟ 🧐",
+            "Hmm أنا هنا باش نعاونك ولكن يلزم تفهمني شوي. قلي واش باغي بالزبط؟ 🎯",
+            "عاود جرب صهبي، أنا هنا ونصغي ليك 🦁",
+            "واصل كيما راك! أعطيني سقسية واضحة ونعاونك إن شاء الله 💪",
+            "صهبي، أنا OranAI وحدي، ولكن يلزم تفهمني واش باغي 😅 قلي أكثر!"
+          ];
+          return g[Math.floor(Math.random() * g.length)];
+        }
+      }
+    ];
+
+    for (const p of patterns) {
+      if (p.match.test(lower)) {
+        return p.reply();
+      }
+    }
+    return "صهبي، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
+  }
 
   function sendDemoMessage() {
     const text = demoInput.value.trim();
@@ -80,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       removeDemoTyping();
-      const reply = demoReplies[Math.floor(Math.random() * demoReplies.length)];
+      const reply = getReply(text);
       addDemoMsg(reply, 'ai-msg');
       demoInput.disabled = false;
       demoSend.disabled = false;
@@ -93,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     div.className = `msg ${className}`;
     const bubble = document.createElement('div');
     bubble.className = 'msg-bubble';
-    bubble.textContent = text;
+    bubble.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
     div.appendChild(bubble);
     demoMessages.appendChild(div);
     demoMessages.scrollTop = demoMessages.scrollHeight;
