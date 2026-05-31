@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OranAI — Assistant Intelligent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="noise"></div>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">OranAI</span>
+      </div>
+      <div class="nav-links">
+        <a href="#demo" class="nav-link">Demo</a>
+        <a href="#live-chat" class="nav-link">سقسيه</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#contact" class="nav-link">Contact</a>
+        <a href="https://github.com/klasiinkov" target="_blank" class="nav-cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+      <button class="menu-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🚀 AI Assistant v1.0</div>
+      <h1 class="hero-title">
+        Ton assistant<br>
+        <span class="gradient-text">intelligent &amp; déroutant</span>
+      </h1>
+      <p class="hero-sub">
+        Code, blagues, réflexion — un seul agent pour tout. Propulsé par DeepSeek V4.
+      </p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn-primary">
+          Voir la démo
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://github.com/klasiinkov/oranai-landing" target="_blank" class="btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Source
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">24/7</span>
+          <span class="stat-label">Disponible</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Patience</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">Zero</span>
+          <span class="stat-label">Jugement</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="container">
+      <div class="section-label">Démonstration en direct</div>
+      <h2 class="section-title">Notre conversation</h2>
+      <p class="section-desc">
+        Voici un extrait de notre vraie discussion. L'assistant parle derja oranaise, 
+        code, et s'adapte à ton style.
+      </p>
+
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="chat-avatar">
+            <div class="avatar-ring">
+              <span class="avatar-emoji">◆</span>
+            </div>
+            <div class="chat-info">
+              <span class="chat-name">OranAI</span>
+              <span class="chat-status">● En ligne</span>
+            </div>
+          </div>
+          <div class="chat-typing" id="typingIndicator">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg user-msg">
+            <div class="msg-bubble">salut cava</div>
+          </div>
+          <div class="msg ai-msg">
+            <div class="msg-bubble">Salut, ça va bien ! Et toi ?</div>
+          </div>
+          <div class="msg user-msg">
+            <div class="msg-bubble">tu est kel ai deepseek kel version</div>
+          </div>
+          <div class="msg ai-msg">
+            <div class="msg-bubble">Je suis propulsé par <strong>deepseek-v4-flash-free</strong>.</div>
+          </div>
+          <div class="msg user-msg">
+            <div class="msg-bubble">tu peux pqfler avec moi comme oranais algerien</div>
+          </div>
+          <div class="msg ai-msg">
+            <div class="msg-bubble">Wesh habibi, wakha nflawé mzyana. Kifach rak? Galili chno raki t'habi?</div>
+          </div>
+          <div class="msg user-msg">
+            <div class="msg-bubble">rak moghrabi gotlk wahrani sahbi</div>
+          </div>
+          <div class="msg ai-msg">
+            <div class="msg-bubble">Hahaha sahbi, walou ana mchi moghrabi — ana wahrani weldi weld Oran, w khalek. Ghalti fiya hbib, tbadel fih w chouf. Tani hna bhalna bhal, derja ta3 lgharb mzyana w khali lik lbizar. Chno raki t'habi tdir?</div>
+          </div>
+          <div class="msg user-msg">
+            <div class="msg-bubble">baghi nta ndirek fi landin page atini apk ta3ek?</div>
+          </div>
+          <div class="msg ai-msg highlight-msg">
+            <div class="msg-bubble">
+              Hahaha sahbi, ana mchi applk — ana un assistant virtuel, rani flcloud. Makich APK ndirouh f landing page. Mais si baghi ndirouha, je peux t'aider à créer ta propre landing page w ncodewha mzyana. Ghir atini les instructions, w n'inshallah nkharjou haja bhal l'oriental hhhh.
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-wrapper">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Tape ton message en derja..." disabled>
+            <button class="chat-send" id="chatSend" disabled>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+          <p class="chat-footer-text">Démo non-interactive · Extrait de conversation réelle</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="live-chat-section" id="live-chat">
+    <div class="container">
+      <div class="section-label">تفاعلي مباشر</div>
+      <h2 class="section-title">سقسيه بالوهراني 🌊</h2>
+      <p class="section-desc" style="direction: rtl;">
+        Cliquez sur les boutons, l'assistant répond en derja oranaise en direct.
+      </p>
+
+      <div class="chat-container" id="chatContainer">
+        <div class="chat-container-header">
+          <div class="status-dot"></div>
+          <span>OranAI Agent <span class="cursor-blink">_</span></span>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+          <div class="msg ai-msg">
+            <div class="msg-bubble">العافية صهبي، واش باغي تسقسيني؟ 😎</div>
+          </div>
+        </div>
+
+        <div class="chat-actions">
+          <p class="actions-label">سقسيه لايف بالوهراني:</p>
+          <div class="buttons-group">
+            <button class="action-btn" onclick="askOranAI('العافية صهبي، واش تقدر تدير؟')">واش تقدر تدير؟</button>
+            <button class="action-btn" onclick="askOranAI('ترجملي هادي للوهراني: Good morning my friend')">ترجم للوهراني 🔄</button>
+            <button class="action-btn" onclick="askOranAI('أعطيني كود سكريبت بوت خفيف')">باغي سكريبت بوت 🤖</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">Capacités</div>
+      <h2 class="section-title">Pourquoi OranAI ?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Précision</h3>
+          <p>Compréhension parfaite du contexte, même en derja ou mélangé.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Polyglotte</h3>
+          <p>Français, Arabe, Derja, Anglais — tout passe.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Vitesse</h3>
+          <p>Réponses instantanées, zéro latence.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Code & Tech</h3>
+          <p>React, Python, DevOps, tout ce dont t'as besoin.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">😂</div>
+          <h3>Humour</h3>
+          <p>Blagues, vannes, et bonne ambiance garantie.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🆓</div>
+          <h3>100% Gratuit</h3>
+          <p>Pas de paywall, pas de limite. Juste toi et moi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Prêt à discuter ?</h2>
+        <p>Clone le repo, déploie sur GitHub Pages, et lance ton propre assistant.</p>
+        <div class="cta-actions">
+          <a href="https://github.com/klasiinkov/oranai-landing" target="_blank" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            Voir sur GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="logo-icon">◆</span>
+          <span class="logo-text">OranAI</span>
+        </div>
+        <p class="footer-text">Propulsé par DeepSeek · Créé par <a href="https://github.com/klasiinkov" target="_blank">@klasiinkov</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
