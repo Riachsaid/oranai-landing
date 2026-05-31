@@ -55,50 +55,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoInput = document.getElementById('chatInput');
   const demoSend = document.getElementById('chatSend');
   const demoMessages = document.getElementById('chatMessages');
-  let first = true;
+  const API = "/api/chat";
+  const conv = [];
 
-  function reply(input) {
-    const m = input.toLowerCase().trim();
-    if (m.startsWith('السلام')||m.startsWith('سلام')||m.startsWith('صباح')||m.startsWith('مساء')||m.startsWith('أهلا')) return pick(["السلام عليكم يا الشيخ! 🌊 كيفاش راك؟ أنا OranAI، واجد باش نعاونك فكل حاجة!","وعليكم السلام! 🦁 راني هنا، واش كاين؟ تحب تسقسيني على حاجة؟","العافية يا الشيخ! 🔥 تشرفت بيك! واش باغي تبدا؟","هلا هلا يا الشيخ! ✨ راني في الخدمة. واش باغي نعملو اليوم؟"]);
-    if (m.includes('كيفاش')||m.includes('كيف')||m.includes('wesh')) return pick(["العافية يا الشيخ! 🚀 راني نزيد نسخن شويا، وأنت كيفاش راك؟","Hahaha! أنا دايما بخير يا الشيخ، واش باغي؟ 🦁","والله راني هنا باش نعاونك، وأنت واصل باللي راك فيه! 🔥","Layes ya l'chikh! راني في القمة، جامد نهار ما تهزز. واش كاين؟ 💪"]);
-    if (m.includes('deepseek')||m.includes('version')||m.includes('v4')||m.includes('تقنية')) return "أنا مدعوم بــ **DeepSeek V4 Flash** 🧠 — نموذج ذكاء اصطناعي قوي، سريع، ومجاني بالكامل. نقدر نكتبلك كود، نترجم، نجاوب على أسئلتك، وحتى نفلّي معاك بالوهراني! 💻🔥";
-    if (m.includes('كود')||m.includes('code')||m.includes('script')||m.includes('python')||m.includes('javascript')||m.includes('js')||m.includes('html')||m.includes('css')||m.includes('برمجة')) return pick(["آه باغي كود! 🖥️ نقدر نكتبلك بايثون، جافاسكريبت، HTML/CSS، وحتى سكريبتات أتمتة. واش باغي بالزبط؟","كود؟ هاها أنا فنان في البرمجة! 💻 قلي واش باغي، بايثون، جافاسكريبت، ولا حاجة أخرى؟","برمجة؟ يا الشيخ راني هنا! 🚀 نقدر نصنعلك أي سكريبت تحب. أعطيني الفكرة وخلّي الباقي عليا."]);
-    if (m.includes('ترجم')||m.includes('translate')||m.includes('ترجمة')||m.includes('derja')||m.includes('وهراني')) return pick(["آه الترجمة للوهراني! 🌊 هذي عندي. قلي الجملة وخلّي عليا الترجمة — باش نشعلوها بالوهراني الفصيح!","الترجمة للوهراني؟ 🎯 هذا تخصصي! أعطيني النص وأنا نعطيك الترجمة مع النكهة الوهرانية الأصيلة.","هاها، الوهراني عندو نكهتو! 😄 قلي واش باغي تترجم ونخدمهالك بالحب."]);
-    if (m.includes('اسمك')||m.includes('شكون')||m.includes('شنو')) return "أنا **OranAI** 🦁 — مساعد ذكي بالوهراني، مدعوم بـ DeepSeek V4. نقدر نكتبلك كود، نترجم، نجاوب، ونفلّي معاك بالديرجا. واش باغي تبدا؟ 💪";
-    if (m.includes('شكرا')||m.includes('merci')||m.includes('thanks')||m.includes('thank')||m.includes('جزاك')||m.includes('بارك')) return pick(["العفو يا الشيخ! 🎯 دايما فاضي ليك، حاجة أخرى؟","لا شكر على واجيب! ❤️ واصل باللي راك فيه، ونحن هنايا باش نعاونو.","De rien ya l'chikh! 😎 أنا هنا باش نخدم، حاجة أخرى تحبها؟"]);
-    if (m.startsWith('معا السلامة')||m.startsWith('باي')||m.startsWith('bye')||m.startsWith('goodbye')||m.startsWith('نروح')) return pick(["باي يا الشيخ! 🚀 كان شرف ليا. رجع وقت ما تحب، راني هنا!","معا السلامة! 🌊 نحبك ونتمنى نشوفك قريب. دير بالك على روحك!","نشوفك في وقت آخر يا الشيخ! 🦁 نتمنى تكون استفدت. أي وقت تحب، أنا هنا."]);
-    if (m.includes('وين')||m.includes('مكان')||m.includes('site')||m.includes('landing')) return "هاد الـ Landing Page تاع **OranAI** 🎯 — موقع تعريفي للمساعد الذكي بالوهراني. تقدر تلقى الكود كامل على GitHub: https://github.com/klasiinkov/oranai-landing ✨";
-    if (m.includes('حب')||m.includes('love')||m.includes('جميل')||m.includes('رائع')||m.includes('باهي')||m.includes('تحفه')) return pick(["هاها شكرا يا الشيخ! ❤️ أنت اللي رائع، بزاف!","والله نفتخر بيك! 😎 تحب حاجة أخرى ولا نبقاو نفلّيو؟","هذا من ذوقك يا الشيخ! 🦁 دايما فاضي ليك."]);
-    if (m.includes('بيت')||m.includes('btc')||m.includes('crypto')||m.includes('عملات')||m.includes('bitcoin')||m.includes('eth')) return "كريبتو؟ 🪙 يا الشيخ، أنا فاهم في العملات الرقمية! نقدر نعاونك بالمعلومات العامة، تحليل السوق، وحتى كتابة سكريبتات للمتاجرة. ولكن تذكّر: هاد مشورة مالية، دير البحث تاعك! 🚀";
-    if (m.includes('بوت')||m.includes('bot')||m.includes('automation')||m.includes('أتمتة')||m.includes('سكراب')) return "آه البوتات والأتمتة! 🤖 هذا تخصصي. نقدر نكتبلك بوتات بايثون، سيلينيوم، Playwright، وحتى سكريبتات سكرابينغ. أعطيني الفكرة ونخدمهالك! 🚀";
-    if ((m.includes('أيام')||m.includes('يوم'))&&(m.includes('سنة')||m.includes('عام'))) return "السنة فيها **365 يوم**، وفي السنة الكبيسة (كل 4 سنين) فيها **366 يوم** يا الشيخ! 📅";
-    if ((m.includes('سنة')||m.includes('عام'))&&(m.includes('يوم')||m.includes('شهر'))) return "السنة فيها **365 يوم**، أو **12 شهر**، أو **52 أسبوع**. كل 4 سنين تزيد يوم واحد في فبراير 📅";
-    if (m.includes('شهر')&&m.includes('يوم')) return "الشهر يا الشيخ، إما **30 يوم** أو **31 يوم**، إلا شهر فبراير اللي فيه 28 يوم (29 في السنة الكبيسة) 📅";
-    if ((m.includes('ساعة')||m.includes('hour'))&&(m.includes('يوم')||m.includes('day'))) return "اليوم فيه **24 ساعة** يا الشيخ! 🕐";
-    if (m.includes('ساعة')) return "الساعة فيها **60 دقيقة**، والدقيقة فيها **60 ثانية** ⏱️";
-    if (m.includes('دقيقة')) return "الدقيقة فيها **60 ثانية** يا الشيخ ⏱️";
-    return pick(["هاهاها يا الشيخ، سقسية زعما والو؟ 😄 عاود جرب حاجة أخرى.","والله ما فهمتك بزاف يا الشيخ. تقدر تعيد صياغة السؤال؟ 🧐","Hmm أنا هنا باش نعاونك ولكن يلزم تفهمني شوي. قلي واش باغي بالزبط؟ 🎯","عاود جرب يا الشيخ، أنا هنا ونصغي ليك 🦁","واصل كيما راك! أعطيني سقسية واضحة ونعاونك إن شاء الله 💪","يا الشيخ، أنا OranAI وحدي، ولكن يلزم تفهمني واش باغي 😅 قلي أكثر!"]);
-  }
-  
-  function pick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+  let busy = false;
 
   function send() {
     const t = demoInput.value.trim();
-    if (!t) return;
+    if (!t || busy) return;
+    busy = true;
     demoInput.value = '';
-    addMsg(t, 'user-msg');
     demoInput.disabled = true;
     demoSend.disabled = true;
-    setTimeout(() => addTyping(), 400);
-    setTimeout(() => {
+    addMsg(t, 'user-msg');
+    conv.push({role:"user",content:t});
+    addTyping();
+
+    fetch(API, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:conv})
+    })
+    .then(r => r.json())
+    .then(d => {
       rmvTyping();
-      let r = reply(t);
-      if (first) { r = "عندك بايان عندك بايان هههه " + r; first = false; }
-      addMsg(r, 'ai-msg');
+      const reply = d.reply || "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
+      conv.push({role:"assistant",content:reply});
+      addMsg(reply, 'ai-msg');
+      busy = false;
       demoInput.disabled = false;
       demoSend.disabled = false;
       demoInput.focus();
-    }, 1200 + Math.random() * 1000);
+    })
+    .catch(() => {
+      rmvTyping();
+      addMsg("يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎", 'ai-msg');
+      busy = false;
+      demoInput.disabled = false;
+      demoSend.disabled = false;
+      demoInput.focus();
+    });
   }
 
   function addMsg(text, cls) {
@@ -143,29 +139,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.askOranAI = function(question) {
-    const chatBody = document.getElementById('chatBody');
     const buttons = document.querySelectorAll('.action-btn');
     buttons.forEach(b => b.disabled = true);
 
     addMessage(question, 'user-msg');
+    setTimeout(() => addTyping(), 300);
 
-    setTimeout(() => {
-      addTyping();
-    }, 300);
-
-    const prefix = 'عندك بايان عندك بايان هههه ';
-    const responses = {
-      'العافية يا الشيخ، واش تقدر تدير؟': prefix + 'العافية يا الشيخ 😎 راني هنا باش نعاونك فكل حاجة! نقدر نكتبلك كود، نترجملك للوهراني، نجاوب على أسئلتك، نحللك مشاكل التقنية، وحتى نفلّي معاك بالديرجا. أنا مثل DeepSeek ولكن بالوهراني — فاهم الدنيا كلها. واش باغي تبدا؟ 💪',
-      'ترجملي هادي للوهراني: Good morning my friend': prefix + 'هاك الترجمة يا الشيخ 🌊:\n\n"صباح الخير صاحبي، كي راك؟ العافية وين راكي؟ هلالك!"\n\n(Good morning my friend, how are you? Good health, where are you? How are you doing!)\n\nملاحظة: الوهراني عندو نكهتو الخاص — كل حاجة بالحب والطاسة 😄',
-      'أعطيني كود سكريبت بوت خفيف': prefix + 'هاك هاد الـ سكريبت تاع بايثون ساهل ماهل:\n\n```python\nimport time\n\nprint(\'OranAI Bot راه واجد...\')\n# هنا نزيدو الـ automation تاعك\n```\n\nتقدر تدمجه مع Selenium ولا خـمسات كيما تبغي!'
-    };
-
-    setTimeout(() => {
+    fetch(API, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:[{role:"user",content:question}]})
+    })
+    .then(r => r.json())
+    .then(d => {
       removeTyping();
-      const reply = responses[question] || prefix + 'هذي سقسية زعما والو؟ هههههههه يا الشيخ، عاود جرب حاجة أخرى 😄';
+      const reply = d.reply || "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
       addMessage(reply, 'ai-msg');
       buttons.forEach(b => b.disabled = false);
-    }, 1500 + Math.random() * 1000);
+    })
+    .catch(() => {
+      removeTyping();
+      buttons.forEach(b => b.disabled = false);
+    });
   };
 
   function addMessage(text, className) {
