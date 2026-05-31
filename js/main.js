@@ -52,6 +52,73 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const demoInput = document.getElementById('chatInput');
+  const demoSend = document.getElementById('chatSend');
+  const demoMessages = document.getElementById('chatMessages');
+
+  const demoReplies = [
+    "Sahbi! 🦁 واش باغي؟ أنا هنا باش نعاونك فكل حاجة!",
+    "Hahaha, سقسية مليحة! 🎯 واصل كيما راك.",
+    "والله صهبي، هذي سقسية تاع الخير! 😄 واش باغي تعرف بالزبط؟",
+    "Hmm هاذي سقسية عميقة... تفكر فيها بزاف 🔥",
+    "خويا، تقدر تقلي أكثر؟ باغي نفهم ونساعدك مزيان 💪",
+    "Wesh wesh! 🌊 رانا هنايا، واش كاين جديد؟",
+    "هاهاها، برافو عليك صهبي! سقسية ديجا جاوبت عليها فوق، ولكن معليش نعاود: أنا هنا باش نعاونك 😎",
+    "والله غير هاذا؟ تقدر تطلب حاجة أخرى، أنا فاضي ليك ❤️",
+    "C'est bon sahbi, خلاص ديرها في بالك. واصل باللي راك فيه 🚀",
+  ];
+
+  function sendDemoMessage() {
+    const text = demoInput.value.trim();
+    if (!text) return;
+    demoInput.value = '';
+    addDemoMsg(text, 'user-msg');
+    demoInput.disabled = true;
+    demoSend.disabled = true;
+
+    setTimeout(() => addDemoTyping(), 400);
+
+    setTimeout(() => {
+      removeDemoTyping();
+      const reply = demoReplies[Math.floor(Math.random() * demoReplies.length)];
+      addDemoMsg(reply, 'ai-msg');
+      demoInput.disabled = false;
+      demoSend.disabled = false;
+      demoInput.focus();
+    }, 1200 + Math.random() * 1000);
+  }
+
+  function addDemoMsg(text, className) {
+    const div = document.createElement('div');
+    div.className = `msg ${className}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = text;
+    div.appendChild(bubble);
+    demoMessages.appendChild(div);
+    demoMessages.scrollTop = demoMessages.scrollHeight;
+  }
+
+  function addDemoTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg ai-msg';
+    div.id = 'demo-typing';
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble typing-bubble';
+    bubble.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    div.appendChild(bubble);
+    demoMessages.appendChild(div);
+    demoMessages.scrollTop = demoMessages.scrollHeight;
+  }
+
+  function removeDemoTyping() {
+    const el = document.getElementById('demo-typing');
+    if (el) el.remove();
+  }
+
+  if (demoSend) demoSend.addEventListener('click', sendDemoMessage);
+  if (demoInput) demoInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendDemoMessage(); });
+
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
