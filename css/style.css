@@ -19,7 +19,7 @@
   --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
   --radius: 16px;
   --radius-sm: 10px;
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font: 'Inter', 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html {
