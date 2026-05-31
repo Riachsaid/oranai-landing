@@ -55,13 +55,70 @@ document.addEventListener('DOMContentLoaded', () => {
   const demoInput = document.getElementById('chatInput');
   const demoSend = document.getElementById('chatSend');
   const demoMessages = document.getElementById('chatMessages');
+  let isFirstReply = true;
+  const demoHistory = [];
 
-  function getReply(input) {
+  function getTopic(input) {
+    const lower = input.toLowerCase();
+    if (/^(salut|bonjour|hello|hi|hey|salam|سلام)/i.test(lower)) return 'greeting';
+    if (/(كيفاش|كيف|la forme|ça va|çava|how are|wesh)/i.test(lower)) return 'howareyou';
+    if (/(deepseek|version|v4|quel ai|model|type|tech|تقنية)/i.test(lower)) return 'about';
+    if (/(كود|code|script|python|javascript|js|html|css|برمجة)/i.test(lower)) return 'code';
+    if (/(ترجم|translate|ترجمة|derja|وهراني)/i.test(lower)) return 'translate';
+    if (/(اسمك|شكون|what are you|who are|شنو)/i.test(lower)) return 'identity';
+    if (/(شكرا|merci|thanks|thank|جزاك|بارك)/i.test(lower)) return 'thanks';
+    if (/(باي|bye|goodbye|au revoir|سلام|نروح)/i.test(lower)) return 'goodbye';
+    if (/(وين|مكان|فين|address|site|landing)/i.test(lower)) return 'landing';
+    if (/(بيت|btc|crypto|عملات|bitcoin)/i.test(lower)) return 'crypto';
+    if (/(بوت|bot|automation|أتمتة|سكراب)/i.test(lower)) return 'automation';
+    return 'other';
+  }
+
+  function getReply(input, history) {
     const lower = input.toLowerCase().trim();
+    const topic = getTopic(input);
+    const lastBotMsg = history.filter(m => m.role === 'bot').slice(-1)[0];
+    const lastBotTopic = lastBotMsg ? lastBotMsg.topic : null;
+    const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0];
+    const prevUserText = prevUserMsg ? prevUserMsg.text.toLowerCase() : '';
+    const alreadyAsked = history.filter(m => m.role === 'user' && getTopic(m.text) === topic).length > 1;
+
+    if (topic === 'other' && lastBotTopic) {
+      if (/(زيد|هضّر|tell me more|more|أكثر|عاود|again|هاذا|هاد)/i.test(lower)) {
+        const followups = {
+          code: "آه، تحب نزيدو في الكود؟ 🖥️ قلي واش باغي بالزبط — بايثون، جافاسكريبت، ولا أتمتة؟ ونزيدو التطبيق! 💻🔥",
+          translate: "الترجمة؟ 🎯 أعطيني الجملة اللي باغي تترجمها للوهراني ونخدمهالك فورا! 🌊",
+          crypto: "الكريبتو؟ 🪙 تحب تعرف على عملة معينة؟ BTC, ETH, ولا حاجة أخرى؟ أنا هنا باش نعاونك بالمعلومات!",
+          automation: "الأتمتة والبوتات؟ 🤖 نقدر نصنعلك بوت تاع تويتر، سكرابينغ، ولا أي حاجة. واش باغي بالزبط؟",
+          about: "DeepSeek V4 Flash 🧠 هو نموذج ذكاء اصطناعي متطور، سريع، ومجاني. يقدر يتعامل مع الكود، الترجمة، والتحليل. واش باغي تعرف أكثر؟",
+          landing: "هاد الـ Landing Page تاع OranAI 🎯 تقدر تلقى الكود على GitHub. حاجة أخرى تحب تسقسيلها؟"
+        };
+        if (followups[lastBotTopic]) return followups[lastBotTopic];
+      }
+      if (/(لا|والو|غير هاذا|non|nothing|no|ok|مليح|بصح)/i.test(lower)) {
+        return "Ok ok يا الشيخ! 🦁 واصل كيما راكت. أي وقت تحب حاجة، أنا هنا! 🔥";
+      }
+    }
+
+    if (topic === 'thanks') {
+      if (lastBotTopic === 'code') return "العفو يا الشيخ! 🖥️ دايما فاضي ليك فالهضرة على الكود والبرمجة. حاجة أخرى تحبها؟ 💻";
+      if (lastBotTopic === 'translate') return "العفو يا الشيخ! 🌊 الترجمة للوهراني عندي دايما جاهزة. حاجة أخرى؟";
+      if (lastBotTopic === 'crypto') return "لا شكر على واجيب يا الشيخ! 🪙 أي وقت تحب نتكلمو على الكريبتو، أنا هنا.";
+      return "العفو يا الشيخ! 🎯 دايما فاضي ليك، حاجة أخرى؟";
+    }
+
+    if (topic === 'greeting' && alreadyAsked) {
+      return "أهلا بيك مرة أخرى يا الشيخ! 🦁 رجعتي، نورتنا. واش باغي نعملو اليوم؟";
+    }
+
+    if (topic === 'other' && lastBotTopic !== null && prevUserText === lower && prevUserText.length > 3) {
+      return "هاها، عاودتي نفس السقسية يا الشيخ! 😄 نفس الجواب: أنا هنا باش نعاونك. قلي حاجة أخرى غير هاذي!";
+    }
 
     const patterns = [
       {
         match: /^(salut|bonjour|bonsoir|hello|hi|hey|salam|السلام|سلام|صباح|مساء)/i,
+        topic: 'greeting',
         reply: () => {
           const g = [
             "Salut ya l'chikh! 🌊 كيفاش راك؟ أنا OranAI، واجد باش نعاونك فكل حاجة!",
@@ -74,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(كيفاش|كيف|كِي|كيفا|كاي راك|كاين راك|la forme|ça va|çava|how are|wesh)/i,
+        topic: 'howareyou',
         reply: () => {
           const g = [
             "العافية يا الشيخ! 🚀 راني نزيد نسخن شويا، وأنت كيفاش راك؟ واصل كيما راك!",
@@ -86,12 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(deepseek|version|v4|modèle|model|quel ai|type|tech|تقنية|version)/i,
+        topic: 'about',
         reply: () => {
           return "أنا مدعوم بــ **DeepSeek V4 Flash** 🧠 — نموذج ذكاء اصطناعي قوي، سريع، ومجاني بالكامل. نقدر نكتبلك كود، نترجم، نجاوب على أسئلتك، وحتى نفلّي معاك بالوهراني! 💻🔥 تقدر تقارنني بـ GPT-4 ولكن بوهرانيتي أنا فريد من نوعي.";
         }
       },
       {
         match: /(كود|code|script|python|javascript|js|html|css|programme|programmation|برمجة)/i,
+        topic: 'code',
         reply: () => {
           const g = [
             "آه باغي كود! 🖥️ نقدر نكتبلك بايثون، جافاسكريبت، HTML/CSS، وحتى سكريبتات أتمتة. واش باغي بالزبط؟ أعطيني التفاصيل ونخدمهالك ديجا!",
@@ -103,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(ترجم|translate|ترجمة|بالوهراني|بالدارجة|درجة|derja|وهراني|وهرانية)/i,
+        topic: 'translate',
         reply: () => {
           const g = [
             "آه الترجمة للوهراني! 🌊 هذي عندي. قلي الجملة وخلّي عليا الترجمة — باش نشعلوها بالوهراني الفصيح!",
@@ -114,12 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(اسمك|شكون|نتا شكون|what are you|who are|qu'est-ce que tu|شنو|شنويا)/i,
+        topic: 'identity',
         reply: () => {
           return "أنا **OranAI** 🦁 — مساعد ذكي بالوهراني، مدعوم بـ DeepSeek V4. نقدر نكتبلك كود، نترجم، نجاوب، ونفلّي معاك بالديرجا. أنا مثل DeepSeek ولكن بالوهراني — فاهم الدنيا كلها. واش باغي تبدا؟ 💪";
         }
       },
       {
         match: /(شكرا|merci|thanks|thank you|thankyou|جزاك|بارك|ميترسي)/i,
+        topic: 'thanks',
         reply: () => {
           const g = [
             "العفو يا الشيخ! 🎯 دايما فاضي ليك، حاجة أخرى؟",
@@ -131,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(باي|bye|goodbye|au revoir|معا السلامة|سلام|نروح|نشوفك)/i,
+        topic: 'goodbye',
         reply: () => {
           const g = [
             "باي يا الشيخ! 🚀 كان شرف ليا. رجع وقت ما تحب، راني هنا!",
@@ -142,12 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         match: /(وين|مكان|فين|عنوان|address|موقع|site|landing page|landing|page)/i,
+        topic: 'landing',
         reply: () => {
           return "هاد الـ Landing Page تاع **OranAI** 🎯 — موقع تعريفي للمساعد الذكي بالوهراني. تقدر تلقى الكود كامل على GitHub: https://github.com/klasiinkov/oranai-landing ✨";
         }
       },
       {
         match: /(حب|love|❤|💖|nice|جميل|رائع|باهي|بصح|تحفه|تحفة)/i,
+        topic: 'compliment',
         reply: () => {
           const g = [
             "هاها شكرا يا الشيخ! ❤️ أنت اللي رائع، بزاف!",
@@ -158,31 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       {
-        match: /(واش|شنو|شنهو|واشنو|what|شنويا|euh|qu'est-ce|quoi|comment|pourquoi|ou|where|when)/i,
-        reply: () => {
-          const g = [
-            "سقسية مليحة! 🎯 واش باغي تعرف بالزبط؟ أنا هنا باش نجاوبك.",
-            "هذي سقسية عميقة... 🔥 تفكر فيها بزاف. تقدر تعطيني تفاصيل أكثر باش نعاونك مزيان؟",
-            "واصل كيما راك! 💪 أنا فاهم سقسيتك. واش باغي بالزبط؟",
-            "Hmm 🤔 هايل باش نسقسيلك واعر. قلي أكثر ونعاونك."
-          ];
-          return g[Math.floor(Math.random() * g.length)];
-        }
-      },
-      {
         match: /(بيت|btc|crypto|عملات|bitcoin|eth)/i,
+        topic: 'crypto',
         reply: () => {
           return "كريبتو؟ 🪙 يا الشيخ، أنا فاهم في العملات الرقمية! نقدر نعاونك بالمعلومات العامة، تحليل السوق، وحتى كتابة سكريبتات للمتاجرة. ولكن تذكّر: هاد مشورة مالية، دير البحث تاعك! 🚀";
         }
       },
       {
         match: /(بوت|bot|automation|أتمتة|سكراب|scrape|scraping)/i,
+        topic: 'automation',
         reply: () => {
           return "آه البوتات والأتمتة! 🤖 هذا تخصصي. نقدر نكتبلك بوتات بايثون، سيلينيوم، Playwright، وحتى سكريبتات سكرابينغ. أعطيني الفكرة ونخدمهالك! مثال: بوت تاع تويتر، سكرابينغ مواقع، أتمتة مهام... 🚀";
         }
       },
       {
         match: /.*/,
+        topic: 'other',
         reply: () => {
           const g = [
             "هاهاها يا الشيخ، سقسية زعما والو؟ 😄 عاود جرب حاجة أخرى.",
@@ -199,10 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (const p of patterns) {
       if (p.match.test(lower)) {
-        return p.reply();
+        return { text: p.reply(), topic: p.topic };
       }
     }
-    return "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
+    return { text: "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎", topic: 'other' };
   }
 
   function sendDemoMessage() {
@@ -210,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!text) return;
     demoInput.value = '';
     addDemoMsg(text, 'user-msg');
+    demoHistory.push({ role: 'user', text, topic: getTopic(text) });
     demoInput.disabled = true;
     demoSend.disabled = true;
 
@@ -217,7 +275,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       removeDemoTyping();
-      const reply = "عندك بايان عندك بايان هههه " + getReply(text);
+      const result = getReply(text, demoHistory);
+      let reply = result.text;
+      if (isFirstReply) {
+        reply = "عندك بايان عندك بايان هههه " + reply;
+        isFirstReply = false;
+      }
+      demoHistory.push({ role: 'bot', text: reply, topic: result.topic });
       addDemoMsg(reply, 'ai-msg');
       demoInput.disabled = false;
       demoSend.disabled = false;
