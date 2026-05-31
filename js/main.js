@@ -58,86 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let isFirstReply = true;
   const demoHistory = [];
 
-  function getTopic(input) {
-    const lower = input.toLowerCase();
-    if (/^(السلام|سلام|صباح|مساء|أهلا)/i.test(lower)) return 'greeting';
-    if (/(كيفاش|كيف|wesh)/i.test(lower)) return 'howareyou';
-    if (/(deepseek|version|v4|تقنية)/i.test(lower)) return 'about';
-    if (/(كود|code|script|python|javascript|js|html|css|برمجة)/i.test(lower)) return 'code';
-    if (/(ترجم|translate|ترجمة|derja|وهراني)/i.test(lower)) return 'translate';
-    if (/(اسمك|شكون|شنو)/i.test(lower)) return 'identity';
-    if (/(شكرا|merci|thanks|thank|جزاك|بارك)/i.test(lower)) return 'thanks';
-    if (/(باي|bye|goodbye|سلام|نروح)/i.test(lower)) return 'goodbye';
-    if (/(وين|مكان|address|site|landing)/i.test(lower)) return 'landing';
-    if (/(بيت|btc|crypto|عملات|bitcoin)/i.test(lower)) return 'crypto';
-    if (/(بوت|bot|automation|أتمتة|سكراب)/i.test(lower)) return 'automation';
-    if (/(كم|عدد|كمية|شحال|قداش|day|year|سنة|شهر|أسبوع)/i.test(lower)) return 'knowledge';
-    return 'other';
-  }
-
-  function getReply(input, history) {
+  function respond(input) {
     const lower = input.toLowerCase().trim();
-    const topic = getTopic(input);
-    const lastBotMsg = history.filter(m => m.role === 'bot').slice(-1)[0];
-    const lastBotTopic = lastBotMsg ? lastBotMsg.topic : null;
-    const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0];
-    const prevUserText = prevUserMsg ? prevUserMsg.text.toLowerCase() : '';
-    const alreadyAsked = history.filter(m => m.role === 'user' && getTopic(m.text) === topic).length > 1;
-
-    function wrap(text, t) {
-      return { text, topic: t || topic };
-    }
-
-    if (topic === 'other' && lastBotTopic) {
-      if (/(زيد|هضّر|tell me more|more|أكثر|عاود|again|هاذا|هاد)/i.test(lower)) {
-        const followups = {
-          code: "آه، تحب نزيدو في الكود؟ 🖥️ قلي واش باغي بالزبط — بايثون، جافاسكريبت، ولا أتمتة؟ ونزيدو التطبيق! 💻🔥",
-          translate: "الترجمة؟ 🎯 أعطيني الجملة اللي باغي تترجمها للوهراني ونخدمهالك فورا! 🌊",
-          crypto: "الكريبتو؟ 🪙 تحب تعرف على عملة معينة؟ BTC, ETH, ولا حاجة أخرى؟ أنا هنا باش نعاونك بالمعلومات!",
-          automation: "الأتمتة والبوتات؟ 🤖 نقدر نصنعلك بوت تاع تويتر، سكرابينغ، ولا أي حاجة. واش باغي بالزبط؟",
-          about: "DeepSeek V4 Flash 🧠 هو نموذج ذكاء اصطناعي متطور، سريع، ومجاني. يقدر يتعامل مع الكود، الترجمة، والتحليل. واش باغي تعرف أكثر؟",
-          landing: "هاد الـ Landing Page تاع OranAI 🎯 تقدر تلقى الكود على GitHub. حاجة أخرى تحب تسقسيلها؟"
-        };
-        if (followups[lastBotTopic]) return wrap(followups[lastBotTopic], lastBotTopic);
-      }
-      if (/(لا|والو|غير هاذا|ok|مليح)/i.test(lower)) {
-        return wrap("Ok ok يا الشيخ! 🦁 واصل كيما راكت. أي وقت تحب حاجة، أنا هنا! 🔥");
-      }
-    }
-
-    if (topic === 'thanks') {
-      if (lastBotTopic === 'code') return wrap("العفو يا الشيخ! 🖥️ دايما فاضي ليك فالهضرة على الكود والبرمجة. حاجة أخرى تحبها؟ 💻");
-      if (lastBotTopic === 'translate') return wrap("العفو يا الشيخ! 🌊 الترجمة للوهراني عندي دايما جاهزة. حاجة أخرى؟");
-      if (lastBotTopic === 'crypto') return wrap("لا شكر على واجيب يا الشيخ! 🪙 أي وقت تحب نتكلمو على الكريبتو، أنا هنا.");
-      return wrap("العفو يا الشيخ! 🎯 دايما فاضي ليك، حاجة أخرى؟");
-    }
-
-    if (topic === 'greeting' && alreadyAsked) {
-      return wrap("أهلا بيك مرة أخرى يا الشيخ! 🦁 رجعتي، نورتنا. واش باغي نعملو اليوم؟");
-    }
-
-    if (topic === 'other' && lastBotTopic !== null && prevUserText === lower && prevUserText.length > 3) {
-      return wrap("هاها، عاودتي نفس السقسية يا الشيخ! 😄 نفس الجواب: أنا هنا باش نعاونك. قلي حاجة أخرى غير هاذي!");
-    }
-
-    const knowledgeQA = [
-      { q: /(أيام|يوم).*(سنة|عام)/i, a: "السنة فيها **365 يوم**، وفي السنة الكبيسة (كل 4 سنين) فيها **366 يوم** يا الشيخ! 📅" },
-      { q: /(سنة|عام).*(يوم|شهر)/i, a: "السنة فيها **365 يوم**، أو **12 شهر**، أو **52 أسبوع**. كل 4 سنين تزيد يوم واحد في فبراير (السنة الكبيسة) 📅" },
-      { q: /(شهر).*(يوم)/i, a: "الشهر يا الشيخ، إما **30 يوم** أو **31 يوم**، إلا شهر فبراير اللي فيه 28 يوم (29 في السنة الكبيسة) 📅" },
-      { q: /(كم|شحال|قداش).*(ساعة|hour).*(يوم|day)/i, a: "اليوم فيه **24 ساعة** يا الشيخ! 🕐" },
-      { q: /(كم|شحال|قداش).*(ساعة)/i, a: "الساعة فيها **60 دقيقة**، والدقيقة فيها **60 ثانية** ⏱️" },
-      { q: /(كم|شحال|قداش).*(دقيقة)/i, a: "الدقيقة فيها **60 ثانية** يا الشيخ ⏱️" },
-    ];
-
-    if (topic === 'knowledge') {
-      for (const k of knowledgeQA) {
-        if (k.q.test(lower)) return wrap(k.a, 'knowledge');
-      }
-    }
 
     const patterns = [
       {
-        match: /^(السلام|سلام|صباح|مساء|أهلا)/i,
+        match: /^(السلام|سلام\b|صباح|مساء|أهلا)/i,
         topic: 'greeting',
         reply: () => {
           const g = [
@@ -150,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       {
-        match: /(كيفاش|كيف|wesh)/i,
+        match: /(كيفاش|كيف\b|wesh)/i,
         topic: 'howareyou',
         reply: () => {
           const g = [
@@ -213,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       {
-        match: /(باي|bye|goodbye|سلام|نروح)/i,
+        match: /^(معا السلامة|باي\b|bye|goodbye|نروح)/i,
         topic: 'goodbye',
         reply: () => {
           const g = [
@@ -258,6 +184,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       {
+        match: /(أيام|يوم).*(سنة|عام)/i,
+        topic: 'knowledge',
+        reply: () => { return "السنة فيها **365 يوم**، وفي السنة الكبيسة (كل 4 سنين) فيها **366 يوم** يا الشيخ! 📅"; }
+      },
+      {
+        match: /(سنة|عام).*(يوم|شهر)/i,
+        topic: 'knowledge',
+        reply: () => { return "السنة فيها **365 يوم**، أو **12 شهر**، أو **52 أسبوع**. كل 4 سنين تزيد يوم واحد في فبراير (السنة الكبيسة) 📅"; }
+      },
+      {
+        match: /(شهر).*(يوم)/i,
+        topic: 'knowledge',
+        reply: () => { return "الشهر يا الشيخ، إما **30 يوم** أو **31 يوم**، إلا شهر فبراير اللي فيه 28 يوم (29 في السنة الكبيسة) 📅"; }
+      },
+      {
+        match: /(ساعة|hour).*(يوم|day)/i,
+        topic: 'knowledge',
+        reply: () => { return "اليوم فيه **24 ساعة** يا الشيخ! 🕐"; }
+      },
+      {
+        match: /(ساعة)/i,
+        topic: 'knowledge',
+        reply: () => { return "الساعة فيها **60 دقيقة**، والدقيقة فيها **60 ثانية** ⏱️"; }
+      },
+      {
+        match: /(دقيقة)/i,
+        topic: 'knowledge',
+        reply: () => { return "الدقيقة فيها **60 ثانية** يا الشيخ ⏱️"; }
+      },
+      {
         match: /.*/,
         topic: 'other',
         reply: () => {
@@ -275,8 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     for (const p of patterns) {
-      if (p.match.test(lower)) {
-        return { text: p.reply(), topic: p.topic };
+      try {
+        if (p.match.test(lower)) {
+          const text = p.reply();
+          return { text, topic: p.topic };
+        }
+      } catch (e) {
+        return { text: "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎", topic: 'other' };
       }
     }
     return { text: "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎", topic: 'other' };
@@ -286,27 +247,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = demoInput.value.trim();
     if (!text) return;
     demoInput.value = '';
-    addDemoMsg(text, 'user-msg');
-    demoHistory.push({ role: 'user', text, topic: getTopic(text) });
-    demoInput.disabled = true;
-    demoSend.disabled = true;
 
-    setTimeout(() => addDemoTyping(), 400);
+    try {
+      addDemoMsg(text, 'user-msg');
+      demoInput.disabled = true;
+      demoSend.disabled = true;
 
-    setTimeout(() => {
-      removeDemoTyping();
-      const result = getReply(text, demoHistory);
-      let reply = result && result.text ? result.text : "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
-      if (isFirstReply) {
-        reply = "عندك بايان عندك بايان هههه " + reply;
-        isFirstReply = false;
-      }
-      demoHistory.push({ role: 'bot', text: reply, topic: result ? result.topic || 'other' : 'other' });
-      addDemoMsg(reply, 'ai-msg');
+      setTimeout(() => addDemoTyping(), 400);
+
+      setTimeout(() => {
+        try {
+          removeDemoTyping();
+          const result = respond(text);
+          let reply = result && result.text ? result.text : "يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎";
+          if (isFirstReply) {
+            reply = "عندك بايان عندك بايان هههه " + reply;
+            isFirstReply = false;
+          }
+          addDemoMsg(reply, 'ai-msg');
+          demoHistory.push({ role: 'user', text });
+          demoHistory.push({ role: 'bot', text: reply });
+        } catch (e) {
+          addDemoMsg("يا الشيخ، أنا هنا باش نعاونك. قلي واش باغي بالزبط؟ 😎", 'ai-msg');
+        }
+        demoInput.disabled = false;
+        demoSend.disabled = false;
+        demoInput.focus();
+      }, 1200 + Math.random() * 1000);
+    } catch (e) {
       demoInput.disabled = false;
       demoSend.disabled = false;
-      demoInput.focus();
-    }, 1200 + Math.random() * 1000);
+    }
   }
 
   function addDemoMsg(text, className) {
